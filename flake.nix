@@ -13,6 +13,7 @@
         ];
       };
 
+      flake.flakeModule = config.flake.flakeModules.den;
       flake.flakeModules.den = ./parts;
       flake.flakeModules.default = config.flake.flakeModules.den;
     }

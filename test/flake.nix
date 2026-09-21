@@ -5,23 +5,23 @@
     den.url = "github:EllieBytes/den";
   };
 
-  outputs = inputs@{flake-parts, den ...}:
+  outputs = inputs@{flake-parts, den, ...}:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ den.flakeModule ];
+      imports = [ den.flakeModules.default ];
 
-      den.builders.package.searchPaths = [
+      den.searchPaths.packages = [
         ./pkgs
       ];
 
-      den.builders.nixos.searchPaths = [
+      den.searchPaths.nixos = [
         ./hosts
       ];
 
-      den.builders.home.searchPaths = [
+      den.searchPaths.home = [
         ./home
       ];
 
-      den.builders.builder.searchPaths = [
+      den.searchPaths.builder = [
         ./builders
       ];
     };
