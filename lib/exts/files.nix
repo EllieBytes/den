@@ -1,5 +1,4 @@
-final: prev:
-let
+final: prev: let
   matchesAny = regexes: string:
     builtins.elem true (map (r: builtins.match r string));
 in {
@@ -57,10 +56,10 @@ in {
 
     # allNamesPresentIn :: [String] -> Path -> [String]
     # Returns a list of all candidates names present within a directory.
-    allNamesPresentIn = candidates: dir:
-      let
-        all = allNamesIn dir;
-      in builtins.filter (name: builtins.elem name candidates) all;
+    allNamesPresentIn = candidates: dir: let
+      all = allNamesIn dir;
+    in
+      builtins.filter (name: builtins.elem name candidates) all;
 
     # allPathsPresentIn :: [String] -> Path -> [Path]
     # Returns a list of all candidates paths present within a directory.

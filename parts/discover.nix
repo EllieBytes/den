@@ -1,6 +1,8 @@
-{ config, denLib, ... }:
-
-let
+{
+  config,
+  denLib,
+  ...
+}: let
 in {
-  config.flake = denLib.callBuilders config.den;
+  config.flake = denLib.builder.callBuilders config.den;
 }

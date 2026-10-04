@@ -1,14 +1,14 @@
-{ lib, ... }:
-
-let
+{lib, ...}: let
   inherit (builtins) traceVerbose;
 
-  inherit (lib)
+  inherit
+    (lib)
     mkOption
     types
     ;
 
-  inherit (types)
+  inherit
+    (types)
     listOf
     either
     attrsOf
@@ -18,8 +18,7 @@ let
     functionTo
     nullOr
     ;
-in
-{
+in {
   options.flake.den = {
     version = mkOption {
       type = types.str;
@@ -28,7 +27,7 @@ in
     };
 
     builders = mkOption {
-      type = attrsOf (submodule ({ name, ... }: {
+      type = attrsOf (submodule ({name, ...}: {
         options = {
           name = mkOption {
             type = types.str;
@@ -88,10 +87,11 @@ in
 
     internal = {
       forbiddenAttrPaths = mkOption {
-        type = addCheck
+        type =
+          addCheck
           (listOf (either types.str (listOf types.str)))
           (value: traceVerbose "den: running with forbidden attrset paths ${toString value}" true);
-        default = [ "den" "_module" ];
+        default = ["den" "_module"];
         description = ''
           Safety feature. prevents builders from generating outputs in bad places.
         '';
@@ -131,7 +131,7 @@ in
     };
 
     builders = mkOption {
-      type = attrsOf (submodule ({ name, ... }: {
+      type = attrsOf (submodule ({name, ...}: {
         options = {
           name = mkOption {
             type = types.str;
