@@ -52,7 +52,7 @@
             packages = with pkgs; [
               nix
               nixd
-              alejandra
+              nixfmt
               package-version-server
               just
               git
@@ -61,7 +61,13 @@
           };
 
           treefmt = {
-            build.check = true;
+            build.check = (
+              self:
+              pkgs.writeShellScript "check" ''
+                nixfmt --check ${self}
+              ''
+            );
+
             projectRootFile = "flake.nix";
             programs.nixfmt.enable = true;
             programs.rustfmt.enable = true;
