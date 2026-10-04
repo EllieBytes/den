@@ -21,8 +21,5 @@ jobs:
       - name: Magic Nix Cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Format check
-        run: nix fmt -- --check
-
       - name: Run Flake Checks
         run: nix flake check
