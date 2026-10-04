@@ -2,9 +2,11 @@
   inputs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkOption types;
-in {
+in
+{
   options = {
     enable = mkOption {
       type = types.bool;

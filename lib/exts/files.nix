@@ -1,7 +1,8 @@
-final: prev: let
-  matchesAny = regexes: string:
-    builtins.elem true (map (r: builtins.match r string));
-in {
+final: prev:
+let
+  matchesAny = regexes: string: builtins.elem true (map (r: builtins.match r string));
+in
+{
   fs = rec {
     # nameToPath :: Path -> String -> Path
     # Converts a file name to an absolute path, relative to a base directory.
@@ -17,13 +18,11 @@ in {
 
     # allNamesInByPred :: (String -> String -> Bool) -> Path -> [String]
     # Lists all file/directory/symlink names in a directory which follow a predicate.
-    allNamesInByPred = pred: dir:
-      builtins.attrNames (prev.filterAttrs pred (builtins.readDir dir));
+    allNamesInByPred = pred: dir: builtins.attrNames (prev.filterAttrs pred (builtins.readDir dir));
 
     # allPathsInByPred :: (String -> String -> Bool) -> Path -> [Path]
     # Lists all file/directory/symlink paths in a directory which follow a predicate.
-    allPathsInByPred = pred: dir:
-      map (nameToPath dir) (allNamesInByPred pred dir);
+    allPathsInByPred = pred: dir: map (nameToPath dir) (allNamesInByPred pred dir);
 
     # allNamesInMatching :: String -> Path -> [String]
     # Lists all file/directory/symlink names that match a regular expression.
@@ -43,8 +42,8 @@ in {
 
     # allFileNamesInExcluding :: [String] -> Path -> [String]
     # Lists all file names in a directory excluding names specified.
-    allFileNamesInExcluding = exclude:
-      allNamesInByPred (name: kind: (!builtins.elem name exclude) && (kind == "directory"));
+    allFileNamesInExcluding =
+      exclude: allNamesInByPred (name: kind: (!builtins.elem name exclude) && (kind == "directory"));
 
     # allFilePathsInExcluding :: [String] -> Path -> [Path]
     # Lists all file paths in a directory excluding names specified.
@@ -56,9 +55,11 @@ in {
 
     # allNamesPresentIn :: [String] -> Path -> [String]
     # Returns a list of all candidates names present within a directory.
-    allNamesPresentIn = candidates: dir: let
-      all = allNamesIn dir;
-    in
+    allNamesPresentIn =
+      candidates: dir:
+      let
+        all = allNamesIn dir;
+      in
       builtins.filter (name: builtins.elem name candidates) all;
 
     # allPathsPresentIn :: [String] -> Path -> [Path]

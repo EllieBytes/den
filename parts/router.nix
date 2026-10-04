@@ -2,18 +2,19 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (builtins) head mapAttrs;
   inherit (lib) mkDefault;
-in {
+in
+{
   flake.den = {
     builders = config.den.builders;
 
-    internal.defaultPathMappings =
-      mapAttrs (
-        name: {searchPaths, ...}:
-          mkDefault (head searchPaths)
-      )
-      config.den.builders;
+    internal.defaultPathMappings = mapAttrs (
+      name:
+      { searchPaths, ... }:
+      mkDefault (head searchPaths)
+    ) config.den.builders;
   };
 }

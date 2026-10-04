@@ -1,5 +1,6 @@
 final: prev: {
-  mkEnableOption' = name: default:
+  mkEnableOption' =
+    name: default:
     final.mkOption {
       type = final.types.bool;
       inherit default;
@@ -8,12 +9,14 @@ final: prev: {
     };
 
   # For short, undocumented stuff. Try not to use it unless it's really called for.
-  mkOpt = type: default:
+  mkOpt =
+    type: default:
     final.mkOption {
       inherit type default;
     };
 
-  mkOpt' = type:
+  mkOpt' =
+    type:
     final.mkOption {
       inherit type;
     };

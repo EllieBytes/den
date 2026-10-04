@@ -2,7 +2,9 @@
   config,
   denLib,
   ...
-}: let
-in {
+}:
+let
+in
+{
   config.flake = denLib.builder.callBuilders config.den;
 }

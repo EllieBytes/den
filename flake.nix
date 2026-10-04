@@ -5,19 +5,21 @@
   inputs.devshell.url = "github:numtide/devshell";
   inputs.treefmt-nix.url = "github:numtide/treefmt-nix";
 
-  outputs = inputs @ {
-    self,
-    flake-parts,
-    nixpkgs,
-    ...
-  }:
-    flake-parts.lib.mkFlake {inherit inputs;} (
+  outputs =
+    inputs@{
+      self,
+      flake-parts,
+      nixpkgs,
+      ...
+    }:
+    flake-parts.lib.mkFlake { inherit inputs; } (
       {
         config,
         lib,
         withSystem,
         ...
-      }: {
+      }:
+      {
         systems = [
           "x86_64-linux"
           "aarch64-linux"
@@ -45,7 +47,7 @@
         };
         flake.flakeModules.default = config.flake.flakeModules.den;
 
-        perSystem = {pkgs, ...}: {
+        perSystem = { pkgs, ... }: {
           devshells.default = {
             packages = with pkgs; [
               nix
@@ -59,8 +61,9 @@
           };
 
           treefmt = {
+            build.check = true;
             projectRootFile = "flake.nix";
-            programs.alejandra.enable = true;
+            programs.nixfmt.enable = true;
             programs.rustfmt.enable = true;
           };
         };
