@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  inputs,
   ...
 }:
 let
@@ -15,6 +14,7 @@ let
   candidates = [
     "hosts"
     "nixos"
+    "nixosConfigurations"
   ];
 
   filterCandidate =
@@ -49,7 +49,46 @@ in
         {
           nixosConfigurations."${name}" =
             let
-              inherit (builtins) pathExists;
+              inherit (builtins)
+                pathExists
+                head
+                tail
+                isString
+                filter
+                split
+                warn
+                ;
+
+              bestUser =
+                name: host:
+                let
+                  users = attrNames (config.flake.homeConfigurations or { });
+                  separated =
+                    let
+                      splitNames = map (user: filter isString (split "^.*@.*$" user)) users;
+                    in
+                    map (sep: {
+                      name = head sep;
+                      host = tail sep;
+                    }) splitNames;
+
+                  candidates = map (x: {
+                    inherit (x) name;
+                    host = if x.host == [ ] then null else head x.host;
+                  }) separated;
+
+                  bests = filter (x: x.name == name && x.host == host) candidates;
+                  secondBests = filter (x: x.name == name) candidates;
+
+                  best =
+                    if bests != [ ] then
+                      head bests
+                    else if secondBests != [ ] then
+                      head secondBests
+                    else
+                      warn "Could not find acceptable home-manager candidate for ${name}@${host}" { };
+                in
+                best;
 
               importUser =
                 name:
@@ -61,7 +100,7 @@ in
               importedUsers = lib.listToAttrs (
                 map (name: {
                   inherit name;
-                  value = importUser name;
+                  value = bestUser name meta.hostname;
                 }) meta.home-manager.importUsers
               );
             in
