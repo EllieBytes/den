@@ -4,6 +4,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     den.url = ./..;
     nix-unit.url = "github:nix-community/nix-unit";
+    deploy-rs.url = "github:serokell/deploy-rs";
   };
 
   outputs =

@@ -61,13 +61,6 @@
           };
 
           treefmt = {
-            build.check = (
-              self:
-              pkgs.writeShellScript "check" ''
-                nixfmt --check ${self}
-              ''
-            );
-
             projectRootFile = "flake.nix";
             programs.nixfmt.enable = true;
             programs.rustfmt.enable = true;
