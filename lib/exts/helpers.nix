@@ -1,6 +1,13 @@
 _: _:
 let
-  inherit (builtins) pathExists isAttrs isList isNull isFunction mapAttrs;
+  inherit (builtins)
+    pathExists
+    isAttrs
+    isList
+    isNull
+    isFunction
+    mapAttrs
+    ;
 in
 rec {
   # Literally equivalent to (a: a)
@@ -11,7 +18,8 @@ rec {
   safeImport' = p: safeImport p null;
 
   # Sanitizes values recursively, making it exportable in json format.
-  intoExportable = value:
+  intoExportable =
+    value:
     if isAttrs value then
       (mapAttrs (_: v: intoExportable v) value)
     else if isList value then
@@ -20,5 +28,6 @@ rec {
       ""
     else if isFunction value then
       "<function>"
-    else value;
+    else
+      value;
 }

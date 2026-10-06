@@ -56,7 +56,6 @@ impl Cli {
 
         println!("{}", uri.as_str());
 
-
         match &self.command {
             CliSubcmds::Show => {
                 let schema = DenSchema::new(uri.to_string())?;

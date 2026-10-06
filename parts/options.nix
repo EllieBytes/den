@@ -64,7 +64,7 @@ in
               meta = {
                 buildDescriptions = mkOption {
                   type = addCheck (attrsOf types.str) (value: (length value) <= 32);
-                  default = {};
+                  default = { };
                   description = ''
                     A brief description of each build function's outputs/responsibilities.
                     Preferably, just the name of the location(s) the function places outputs in.
