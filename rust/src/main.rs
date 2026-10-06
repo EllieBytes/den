@@ -1,9 +1,5 @@
 use den::cli::Cli;
 
-
 fn main() {
-    Cli::new()
-        .unwrap()
-        .run()
-        .unwrap();
+    Cli::new().unwrap().run().unwrap();
 }

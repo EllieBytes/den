@@ -1,3 +1,3 @@
 pub mod cli;
-pub mod utils;
 pub mod den;
+pub mod utils;
