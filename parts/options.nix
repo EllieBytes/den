@@ -76,6 +76,11 @@ in
                   type = nullOr types.str;
                   default = null;
                 };
+
+                template = mkOption {
+                  type = nullOr types.path;
+                  default = null;
+                };
               };
             };
           }
@@ -90,16 +95,59 @@ in
     };
 
     internal = {
-      forbiddenAttrPaths = mkOption {
-        type = addCheck (listOf (either types.str (listOf types.str))) (
-          value: traceVerbose "den: running with forbidden attrset paths ${toString value}" true
-        );
-        default = [
-          "den"
-          "_module"
-        ];
+      builders = mkOption {
+        type = attrsOf (submodule {
+          options = {
+            name = mkOption {
+              type = types.str;
+              default = "";
+            };
+
+            description = mkOption {
+              type = types.str;
+              default = "";
+            };
+
+            authors = mkOption {
+              type = listOf types.str;
+              default = [ ];
+            };
+
+            version = mkOption {
+              type = nullOr types.str;
+              default = "";
+            };
+
+            search_paths = mkOption {
+              type = listOf types.str;
+              default = [ ];
+            };
+
+            build_functions = mkOption {
+              type = listOf types.str;
+              default = [ ];
+            };
+
+            aggregate_functions = mkOption {
+              type = listOf types.str;
+              default = [ ];
+            };
+
+            default_path = mkOption {
+              type = types.str;
+              default = [ ];
+            };
+
+            template_path = mkOption {
+              type = nullOr types.str;
+              default = null;
+            };
+          };
+        });
+
+        default = { };
         description = ''
-          Safety feature. prevents builders from generating outputs in bad places.
+          Internal schema for the CLI tool.
         '';
       };
 
@@ -185,6 +233,15 @@ in
                 version = mkOption {
                   type = nullOr types.str;
                   default = null;
+                };
+
+                template = mkOption {
+                  type = nullOr types.path;
+                  default = null;
+                  description = ''
+                    A path to a template of a new buildable object.
+                    Intended for use with the CLI tool.
+                  '';
                 };
               };
             };

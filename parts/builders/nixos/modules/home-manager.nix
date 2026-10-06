@@ -32,6 +32,19 @@ in
     extraModules = mkOption {
       type = listOf types.deferredModule;
       default = [ ];
+      description = ''
+        extra modules to add to users' configurations.
+      '';
+    };
+
+    useGlobalPkgs = mkOption {
+      type = types.bool;
+      default = true;
+    };
+
+    useUserPackages = mkOption {
+      type = types.bool;
+      default = true;
     };
   };
 }

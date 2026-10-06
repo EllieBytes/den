@@ -112,8 +112,7 @@ in
                 (
                   if meta.home-manager.enable then
                     {
-                      home-manager.enable = true;
-                      home-manager.useSystemPkgs = meta.home-manager.useSystemPkgs;
+                      home-manager.useGlobalPkgs = meta.home-manager.useGlobalPkgs;
                       home-manager.useUserPackages = meta.home-manager.useUserPackages;
                       home-manager.users = importedUsers // meta.home-manager.users;
                     }

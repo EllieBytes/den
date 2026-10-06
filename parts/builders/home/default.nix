@@ -35,7 +35,8 @@ in
         homeConfigurations."${name}" = meta.home-manager.lib.homeManagerConfiguration {
           pkgs = if meta.pkgs == null then meta.nixpkgs.legacyPackages."${meta.system}" else meta.pkgs;
           modules = [
-            (if pathExists (path + "/home.nix") then import path + "/home.nix" else { })
+            (if pathExists (path + "/home.nix") then import (path + "/home.nix") else { })
+            (if pathExists (path + "/default.nix") then import (path + "/default.nix") else { })
           ]
           ++ meta.extraModules;
         };

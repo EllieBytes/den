@@ -57,6 +57,10 @@
               just
               git
               direnv
+              cargo
+              rust-analyzer
+              gcc
+              rustc
             ];
           };
 

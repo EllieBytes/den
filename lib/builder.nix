@@ -89,7 +89,7 @@ in
     );
 
   callBuilders =
-    den:
+    inputs: flake: den:
     let
       builtOutputs = concatMap (
         builder:
@@ -98,6 +98,7 @@ in
             dir:
             attrValues (
               discoverGenerics {
+                inherit inputs flake;
                 baseMetas = builder.modules;
                 inherit (builder) specialArgs;
               } dir

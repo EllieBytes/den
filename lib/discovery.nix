@@ -26,6 +26,8 @@ in
   # Discovers all items within a directory.
   discoverGenerics =
     {
+      inputs ? { },
+      flake ? { },
       baseMetas ? [ ],
       lib ? lib',
       specialArgs ? { },
@@ -51,7 +53,13 @@ in
               ];
 
               specialArgs = {
-                inherit lib name inputs;
+                inherit
+                  lib
+                  name
+                  inputs
+                  flake
+                  ;
+
                 path = subdir;
               }
               // specialArgs;

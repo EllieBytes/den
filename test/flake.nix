@@ -5,6 +5,7 @@
     den.url = ./..;
     nix-unit.url = "github:nix-community/nix-unit";
     deploy-rs.url = "github:serokell/deploy-rs";
+    home-manager.url = "github:nix-community/home-manager";
   };
 
   outputs =
