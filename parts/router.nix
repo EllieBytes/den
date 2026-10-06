@@ -32,15 +32,14 @@ let
       build_functions = attrNames builder.buildFunctions;
       aggregate_functions = attrNames builder.aggregateFunctions;
       default_path = "${normPath (toString (head builder.searchPaths))}";
-      template_path = "${
-        if isNull builder.meta.template then "" else normPath (toString builder.meta.template)
-      }";
+      template_path = "${if isNull builder.meta.template then "" else toString builder.meta.template}";
     };
 in
 {
   flake.den = {
     builders = config.den.builders;
     internal.builders = mapAttrs translateBuilder config.den.builders;
+    internal.default_template = toString ./default_template;
     internal.defaultPathMappings = mapAttrs (
       name:
       { searchPaths, ... }:

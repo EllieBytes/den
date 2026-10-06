@@ -41,5 +41,17 @@ in
           ++ meta.extraModules;
         };
       };
+
+    meta = {
+      version = "0.1.0-alpha";
+      template = ./template;
+      authors = [ "Ellie Johnston <jellie718@proton.me>" ];
+      description = ''
+        Built in builder.
+        Builds a home-manager configuration.
+
+        home => homeConfigurations.<name>
+      '';
+    };
   };
 }

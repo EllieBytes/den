@@ -165,5 +165,23 @@ in
           };
         };
     };
+
+    meta = {
+      version = "0.1.0-alpha";
+      template = ./template;
+      authors = [ "Ellie Johnston <jellie7118@proton.me>" ];
+      description = ''
+        Produces a nixos configuration, and a deploy-rs node associated with it.
+
+        Optional additions (features)
+          => disko
+          => home-manager
+          => deploy-rs
+          => agenix
+
+        system => nixosConfigurations.<name>
+        deployment => deploy.nodes.<name>
+      '';
+    };
   };
 }

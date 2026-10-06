@@ -19,7 +19,7 @@ pub struct DenBuilder {
 
 impl DenBuilder {
     fn field(f: &mut fmt::Formatter<'_>, label: &str, value: &str) -> fmt::Result {
-        writeln!(f, "  {:<width$}{}", format!("{label}:"), value, width = 18)
+        writeln!(f, "    {:<width$}{}", format!("{label}:"), value, width = 22)
     }
 
     fn list_field(f: &mut fmt::Formatter<'_>, label: &str, items: &[String]) -> fmt::Result {
@@ -27,9 +27,9 @@ impl DenBuilder {
             return Self::field(f, label, "(none)");
         }
 
-        writeln!(f, "  {label}:")?;
+        writeln!(f, "    {label}:")?;
         for item in items {
-            writeln!(f, "    - {item}")?;
+            writeln!(f, "      - {item}")?;
         }
 
         Ok(())
@@ -38,10 +38,15 @@ impl DenBuilder {
 
 impl Display for DenBuilder {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "{} (v{})", self.name, self.version)?;
+        let version = match self.version.as_str() {
+            "" => "*.*.*",
+            _ => self.version.as_str(),
+        };
+
+        writeln!(f, "- {} ({})", self.name, version)?;
 
         for line in self.description.lines() {
-            writeln!(f, "  {line}")?;
+            writeln!(f, "    {line}")?;
         }
 
         writeln!(f)?;
@@ -64,7 +69,7 @@ pub struct DenSchema {
 impl DenSchema {
     pub fn new(flake_ref: String) -> Result<Self> {
         let builders = utils::get_flake_attr::<HashMap<String, DenBuilder>>(flake_ref.as_str(), "den.internal.builders")?;
-        let version = utils::get_flake_attr::<String>(flake_ref.as_str(), "den.internal.version")?;
+        let version = utils::get_flake_attr::<String>(flake_ref.as_str(), "den.version")?;
 
         Ok(Self { builders, version })
     }
@@ -93,11 +98,14 @@ impl DenSchema {
 
 impl std::fmt::Display for DenSchema {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "Den")?;
-        writeln!(f, "Schema Version {}", self.version)?;
+        writeln!(f, "\x1b[1;38;2;255;165;0mDen")?;
+        writeln!(f, "Schema Version {}\x1b[0m", self.version)?;
+        write!(f, "\n\n")?;
 
         if self.builders.is_empty() {
-            return writeln!(f, "No builders defined.");
+            return writeln!(f, "Builders: (none)");
+        } else {
+            writeln!(f, "Builders:")?;
         }
 
         let mut keys: Vec<&String> = self.builders.keys().collect();

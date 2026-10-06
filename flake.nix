@@ -47,7 +47,7 @@
         };
         flake.flakeModules.default = config.flake.flakeModules.den;
 
-        perSystem = { pkgs, ... }: {
+        perSystem = { config, pkgs, ... }: {
           devshells.default = {
             packages = with pkgs; [
               nix
@@ -62,6 +62,13 @@
               gcc
               rustc
             ];
+          };
+
+          packages.default = config.packages.den;
+          packages.den = pkgs.rustPlatform.buildRustPackage {
+            name = "den";
+            src = ./rust;
+            cargoLock.lockFile = ./rust/Cargo.lock;
           };
 
           treefmt = {

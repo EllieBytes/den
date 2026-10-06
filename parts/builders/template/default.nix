@@ -27,5 +27,8 @@
           welcomeText = meta.message;
         };
       };
+
+    meta.template = ./template;
+    meta.authors = [ "Ellie Johnston <jellie7118@proton.me>" ];
   };
 }

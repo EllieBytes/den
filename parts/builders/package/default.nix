@@ -45,5 +45,16 @@ in
             pkgs.callPackage pkg meta.args;
         });
       };
+
+    meta = {
+      version = "0.1.0-alpha";
+      template = ./template;
+      authors = [ "Ellie Johnston <jelli7118@proton.me>" ];
+      description = ''
+        Creates a package.
+
+        package => packages.<system>.<name>
+      '';
+    };
   };
 }
