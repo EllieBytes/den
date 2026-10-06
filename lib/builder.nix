@@ -76,6 +76,10 @@ in
 {
   inherit mkBuilder;
 
+  getBuilderOptions = builder: {
+
+  };
+
   buildOutputsToAttrs =
     outs:
     builtins.foldl' lib.recursiveUpdate { } (

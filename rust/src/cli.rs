@@ -56,16 +56,16 @@ impl Cli {
 
         println!("{}", uri.as_str());
 
-        let schema = DenSchema::new(uri.to_string())?;
 
         match &self.command {
             CliSubcmds::Show => {
+                let schema = DenSchema::new(uri.to_string())?;
                 println!("{schema}");
             }
 
             CliSubcmds::New => {
                 let output = std::process::Command::new("nix")
-                    .arg("--extra-expermental-features")
+                    .arg("--extra-experimental-features")
                     .arg("nix-command flakes")
                     .arg("flake")
                     .arg("init")
@@ -86,63 +86,67 @@ impl Cli {
                 name,
                 builder,
                 output,
-            } => match schema.query_builder(builder.clone()) {
-                Some(b) => {
-                    let base = match uri.scheme().as_str() {
-                        "file" => uri.clone(),
-                        scheme => {
-                            return Err(anyhow!("Invalid scheme {}", scheme));
+            } => {
+                let schema = DenSchema::new(uri.to_string())?;
+
+                match schema.query_builder(builder.clone()) {
+                    Some(b) => {
+                        let base = match uri.scheme().as_str() {
+                            "file" => uri.clone(),
+                            scheme => {
+                                return Err(anyhow!("Invalid scheme {}", scheme));
+                            }
+                        };
+
+                        println!("{}", base.as_str());
+
+                        if b.default_path == "" {
+                            eprintln!("{} has no default directory to output to.", b.name);
+                            return Err(anyhow!("no default directory for {}", b.name));
                         }
-                    };
 
-                    println!("{}", base.as_str());
+                        let default_ref: UriRef<String> =
+                            UriRef::parse(b.default_path.clone() + format!("/{}", name).as_str())
+                                .map_err(|_| anyhow!("Failed to parse full URI"))?
+                                .into();
 
-                    if b.default_path == "" {
-                        eprintln!("{} has no default directory to output to.", b.name);
-                        return Err(anyhow!("no default directory for {}", b.name));
+                        println!("{}", default_ref.as_str());
+
+                        let path = if let Some(p) = output {
+                            p.to_string()
+                        } else {
+                            default_ref
+                                .normalize()
+                                .resolve_against(&base)
+                                .map_err(|_| {
+                                    anyhow!(
+                                        "Failed to resolve {} against base URI",
+                                        b.default_path.clone() + format!("/{}", name).as_str()
+                                    )
+                                })?
+                                .path()
+                                .decode()
+                                .to_string()
+                                .map_err(|_| anyhow!("Error decoding URI"))?
+                                .to_string()
+                        };
+
+                        println!("{}", path);
+
+                        if b.template_path == "" {
+                            return Err(anyhow!("No template exists for builder: {}", b.name));
+                        }
+
+                        return copy_dir(b.template_path, path)
+                            .map_err(|e| anyhow!("Copy failed: {e}"));
                     }
 
-                    let default_ref: UriRef<String> =
-                        UriRef::parse(b.default_path.clone() + format!("/{}", name).as_str())
-                            .map_err(|_| anyhow!("Failed to parse full URI"))?
-                            .into();
-
-                    println!("{}", default_ref.as_str());
-
-                    let path = if let Some(p) = output {
-                        p.to_string()
-                    } else {
-                        default_ref
-                            .normalize()
-                            .resolve_against(&base)
-                            .map_err(|_| {
-                                anyhow!(
-                                    "Failed to resolve {} against base URI",
-                                    b.default_path.clone() + format!("/{}", name).as_str()
-                                )
-                            })?
-                            .path()
-                            .decode()
-                            .to_string()
-                            .map_err(|_| anyhow!("Error decoding URI"))?
-                            .to_string()
-                    };
-
-                    println!("{}", path);
-
-                    if b.template_path == "" {
-                        return Err(anyhow!("No template exists for builder: {}", b.name));
+                    None => {
+                        eprintln!("Selected builder {builder} does not exist");
+                        return Err(anyhow!("builder {builder} does not exist"));
                     }
-
-                    return copy_dir(b.template_path, path)
-                        .map_err(|e| anyhow!("Copy failed: {e}"));
                 }
-
-                None => {
-                    eprintln!("Selected builder {builder} does not exist");
-                    return Err(anyhow!("builder {builder} does not exist"));
-                }
-            },
+            }
         }
 
         Ok(())

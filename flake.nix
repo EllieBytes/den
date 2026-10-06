@@ -2,6 +2,7 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs";
   inputs.flake-parts.url = "github:hercules-ci/flake-parts";
   inputs.flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+
   inputs.devshell.url = "github:numtide/devshell";
   inputs.treefmt-nix.url = "github:numtide/treefmt-nix";
 
@@ -47,6 +48,13 @@
         };
         flake.flakeModules.default = config.flake.flakeModules.den;
 
+        flake.templates.default = {
+          path = ./templates/default;
+          description = ''
+            Default template for a flake on Den.
+          '';
+        };
+
         perSystem = { config, pkgs, ... }: {
           devshells.default = {
             packages = with pkgs; [
@@ -67,8 +75,10 @@
           packages.default = config.packages.den;
           packages.den = pkgs.rustPlatform.buildRustPackage {
             name = "den";
-            src = ./rust;
-            cargoLock.lockFile = ./rust/Cargo.lock;
+            version = "0.1.0";
+
+            src = ./.;
+            cargoLock.lockFile = ./Cargo.lock;
           };
 
           treefmt = {

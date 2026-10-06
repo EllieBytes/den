@@ -14,6 +14,28 @@ let
     ;
 in
 {
+  evalMetas =
+    {
+      name ? "",
+      inputs ? { },
+      flake ? { },
+      modules ? [ ],
+      metas,
+      specialArgs ? { },
+    }:
+    lib.evalModules {
+      modules = modules ++ metas;
+      specialArgs = {
+        inherit
+          name
+          lib
+          inputs
+          flake
+          ;
+      }
+      // specialArgs;
+    };
+
   # discoverGenerics
   # :: {
   #   baseMeta :: Submodule,

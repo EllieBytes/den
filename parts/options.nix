@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (builtins) traceVerbose;
+  inherit (builtins) traceVerbose length;
 
   inherit (lib)
     mkOption
@@ -62,6 +62,16 @@ in
               };
 
               meta = {
+                buildDescriptions = mkOption {
+                  type = addCheck (attrsOf types.str) (value: (length value) <= 32);
+                  default = {};
+                  description = ''
+                    A brief description of each build function's outputs/responsibilities.
+                    Preferably, just the name of the location(s) the function places outputs in.
+                    (32 character limit)
+                  '';
+                };
+
                 description = mkOption {
                   type = types.str;
                   default = "";

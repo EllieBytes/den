@@ -22,6 +22,12 @@ let
           cleaned = replaceStrings [ "${inputs.self.outPath}/" "${inputs.self.outPath}" ] [ "./" "." ] str;
         in
         unsafeDiscardStringContext cleaned;
+
+      defaultPath =
+        if builder.searchPaths == [ ] then
+          "(none)"
+        else
+          "${normPath (toString (head builder.searchPaths))}";
     in
     {
       inherit (builder) name;
@@ -31,7 +37,7 @@ let
       search_paths = map (p: normPath (toString p)) builder.searchPaths;
       build_functions = attrNames builder.buildFunctions;
       aggregate_functions = attrNames builder.aggregateFunctions;
-      default_path = "${normPath (toString (head builder.searchPaths))}";
+      default_path = defaultPath;
       template_path = "${if isNull builder.meta.template then "" else toString builder.meta.template}";
     };
 in
