@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  inherit (builtins) traceVerbose length;
+  inherit (builtins) length;
 
   inherit (lib)
     mkOption
@@ -9,7 +9,6 @@ let
 
   inherit (types)
     listOf
-    either
     attrsOf
     submodule
     addCheck

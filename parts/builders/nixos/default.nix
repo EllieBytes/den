@@ -1,34 +1,11 @@
 {
   config,
   lib,
+  denLib,
   ...
 }:
 let
-  inherit (builtins)
-    elem
-    filter
-    attrNames
-    readDir
-    ;
-
-  candidates = [
-    "hosts"
-    "nixos"
-    "nixosConfigurations"
-  ];
-
-  filterCandidate =
-    candidate:
-    if config.den.root != null then
-      if elem candidate (attrNames (readDir config.den.root)) then true else false
-    else
-      false;
-
-  accepted =
-    if config.den.root != null then
-      (map (name: config.den.root + "/${name}") (filter filterCandidate candidates))
-    else
-      [ ];
+  inherit (builtins) attrNames;
 in
 {
   config.den.builders.nixos = {
@@ -36,7 +13,12 @@ in
     modules = [
       ./modules
     ];
-    searchPaths = accepted;
+    searchPaths = denLib.fs.allPathsPresentIn [
+      "hosts"
+      "nixos"
+      "nixosConfigurations"
+      "systems"
+    ] config.den.root;
     buildFunctions = {
       system =
         {
@@ -89,13 +71,6 @@ in
                       warn "Could not find acceptable home-manager candidate for ${name}@${host}" { };
                 in
                 best;
-
-              importUser =
-                name:
-                if config.flake.homeConfigurations ? "${name}" then
-                  { imports = (config.flake.homeConfigurations."${name}") ++ meta.home-manager.extraModules; }
-                else
-                  builtins.warn "User ${name} not found. Skipping import." { };
 
               importedUsers = lib.listToAttrs (
                 map (name: {
