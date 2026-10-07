@@ -1,5 +1,7 @@
 # Den
 
+<img src="./assets/logo.svg" width="84" height="84" alt="assets/logo.svg">
+
 Make your Nix flake easier to manage.
 
 > [!WARNING]
