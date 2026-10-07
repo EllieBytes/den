@@ -34,7 +34,7 @@ let
       inherit (builder.meta) description authors;
 
       version = toString builder.meta.version;
-      search_paths = map (p: normPath (toString p)) builder.searchPaths;
+      search_paths = map (p: normPath (if isNull p then "(null)" else toString p)) builder.searchPaths;
       build_functions = attrNames builder.buildFunctions;
       aggregate_functions = attrNames builder.aggregateFunctions;
       default_path = defaultPath;
@@ -43,6 +43,7 @@ let
 in
 {
   flake.den = {
+    root = config.den.root;
     builders = config.den.builders;
     internal.builders = mapAttrs translateBuilder config.den.builders;
     internal.default_template = toString ./default_template;

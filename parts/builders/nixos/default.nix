@@ -13,12 +13,16 @@ in
     modules = [
       ./modules
     ];
-    searchPaths = denLib.fs.allPathsPresentIn [
-      "hosts"
-      "nixos"
-      "nixosConfigurations"
-      "systems"
-    ] config.den.root;
+
+    searchPaths = (
+      denLib.fs.allPathsPresentIn [
+        "hosts"
+        "nixos"
+        "nixosConfigurations"
+        "systems"
+      ] config.den.root
+    );
+
     buildFunctions = {
       system =
         {
