@@ -15,12 +15,15 @@ in
     ];
 
     searchPaths = (
-      denLib.fs.allPathsPresentIn [
-        "hosts"
-        "nixos"
-        "nixosConfigurations"
-        "systems"
-      ] config.den.root
+      if config.den.root != null then
+        denLib.fs.allPathsPresentIn [
+          "hosts"
+          "nixos"
+          "nixosConfigurations"
+          "systems"
+        ] config.den.root
+      else
+        [ ]
     );
 
     buildFunctions = {
