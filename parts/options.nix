@@ -25,6 +25,11 @@ in
       default = "0.1.0-alpha";
     };
 
+    root = mkOption {
+      type = nullOr types.path;
+      default = null;
+    };
+
     builders = mkOption {
       type = attrsOf (
         submodule (

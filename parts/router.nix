@@ -46,7 +46,7 @@ in
     root = config.den.root;
     builders = config.den.builders;
     internal.builders = mapAttrs translateBuilder config.den.builders;
-    internal.default_template = toString ./default_template;
+    internal.default_template = ./default_template;
     internal.defaultPathMappings = mapAttrs (
       name:
       { searchPaths, ... }:
