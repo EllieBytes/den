@@ -1,8 +1,11 @@
-# Den
+# Den (Burrow)
 
 <img src="./assets/logo.svg" width="256" height="256" alt="assets/logo.svg"/>
 
 Make your Nix flake easier to manage.
+
+> [!WARNING]
+> Pending release, Den is to be renamed to Burrow for the first stable release. This repository will then be archived.
 
 > [!WARNING]
 > This stuff is incomplete, but partially ready for use.
